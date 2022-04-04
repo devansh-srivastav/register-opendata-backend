@@ -117,6 +117,7 @@ app.get('/api/requests', async (req, res) => {
 })
 
 
+
 // LOGIN VERIFICATION FOR ADMIN PORTAL
 app.post('/api/adminLogin',async (req, res) => {
     
@@ -153,7 +154,7 @@ app.post('/api/result',async (req, res) => {
                 if(body.status==1)
                     {try{
                     let username = await setUsername(body, 0);
-                        res.status(200).json({ status: "ok", code: 200, result:username });
+                    res.status(200).json({ status: "ok", code: 200, result:username });
                     }
                     catch{
                     res.status(400).json({ status: "error", code: 400, error: "Please Try Again"});
@@ -176,7 +177,7 @@ app.post('/api/result',async (req, res) => {
 // TO ASSIGN STATUS
 app.post('/api/createUser',async (req, res) => {
    let body=req.body;
-    
+        console.log(body)
    
         user.findOne({username: body.username}).then((result)=>{
             res.status(200).json({ status: "ok", code: 200, result:result });
@@ -295,6 +296,29 @@ app.post('/api/email', async (req, res) => {
     })
     
 })
+
+
+
+app.get('/api/getUsername/', async (req, res) => {
+    user.find({ 'email': req.query.email }).then(result => {
+        res.status(200).json({ status: "ok", code: 200, result: result });
+
+    }).catch(error => {
+        res.status(401).json({ status: "error", code: 401, error: error });
+    })
+
+})
+
+
+async function getUsername(email){
+    let ans=await user.findOne({ 'email': email }).then(result => {
+         return result;   
+       }).catch(error => {
+         return "";
+     })
+ 
+     return ans;
+ }
 
 
 
